@@ -64,8 +64,8 @@ public class GelfAppender extends AppenderBase<ILoggingEvent> {
         copy.setLevel(event.getLevel());
         copy.setArgumentArray(event.getArgumentArray());
 
-        final GelfMessageBuilder builder = new GelfMessageBuilder(this.layout.doLayout(copy), hostName())
-                .timestamp(event.getTimeStamp() / 1000d)
+        final GelfMessageBuilder builder = new GelfMessageBuilder(this.layout.doLayout(copy), hostName()).timestamp(
+                    event.getTimeStamp() / 1000d)
                 .level(GelfMessageLevel.fromNumericLevel(toGelfNumericValue(event.getLevel())))
                 .additionalField("loggerName", event.getLoggerName())
                 .additionalField("threadName", event.getThreadName());
@@ -103,8 +103,6 @@ public class GelfAppender extends AppenderBase<ILoggingEvent> {
             builder.additionalField("exceptionStackTrace", convertedThrowable);
 
             builder.fullMessage(event.getFormattedMessage() + "\n\n" + convertedThrowable);
-        } else {
-            builder.fullMessage(event.getFormattedMessage());
         }
 
         if (includeLevelName) {
@@ -172,9 +170,13 @@ public class GelfAppender extends AppenderBase<ILoggingEvent> {
         final InetSocketAddress serverAddress = new InetSocketAddress(server, port);
         final GelfTransports gelfProtocol = GelfTransports.valueOf(protocol().toUpperCase());
 
-        return new GelfConfiguration(serverAddress).transport(gelfProtocol).queueSize(queueSize)
-                .connectTimeout(connectTimeout).reconnectDelay(reconnectDelay).sendBufferSize(sendBufferSize)
-                .tcpNoDelay(tcpNoDelay).tcpKeepAlive(tcpKeepAlive);
+        return new GelfConfiguration(serverAddress).transport(gelfProtocol)
+            .queueSize(queueSize)
+            .connectTimeout(connectTimeout)
+            .reconnectDelay(reconnectDelay)
+            .sendBufferSize(sendBufferSize)
+            .tcpNoDelay(tcpNoDelay)
+            .tcpKeepAlive(tcpKeepAlive);
     }
 
 
